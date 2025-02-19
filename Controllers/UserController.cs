@@ -39,11 +39,11 @@ namespace Choresbuddy_dotnet.Controllers
 
         // POST: api/users/register
         [HttpPost("register")]
-        public async Task<ActionResult<User>> RegisterUser(string name, string email, string password)
+        public async Task<ActionResult<User>> RegisterUser(string name, string email, string password, string role)
         {
             try
             {
-                var createdUser = await _userService.RegisterUserAsync(name, email, password);
+                var createdUser = await _userService.RegisterUserAsync(name, email, password, role);
                 return CreatedAtAction(nameof(GetUser), new { id = createdUser.UserId }, createdUser);
             }
             catch (Exception ex)

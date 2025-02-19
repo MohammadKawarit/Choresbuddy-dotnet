@@ -30,7 +30,7 @@ namespace Choresbuddy_dotnet.Services
             return await _context.users.FindAsync(id);
         }
 
-        public async Task<User> RegisterUserAsync(string name, string email, string password)
+        public async Task<User> RegisterUserAsync(string name, string email, string password, string role)
         {
             if (await _context.users.AnyAsync(u => u.Email == email))
             {
@@ -40,7 +40,8 @@ namespace Choresbuddy_dotnet.Services
             User user = new User()
             {
                 Name = name,
-                Email = email
+                Email = email,
+                Role = role
             };
 
             user.PasswordHash = ComputeSha256Hash(password);
