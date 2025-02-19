@@ -36,6 +36,5 @@ app.Urls.Add($"http://*:{port}");
 app.MapGet("/", () => "Welcome to ChoresBuddy API!");
 
 app.UseHttpsRedirection();
-app.UseAuthorization();
 app.MapControllers();
 app.Run();
