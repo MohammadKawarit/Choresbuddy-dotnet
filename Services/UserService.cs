@@ -30,12 +30,18 @@ namespace Choresbuddy_dotnet.Services
             return await _context.users.FindAsync(id);
         }
 
-        public async Task<User> RegisterUserAsync(User user, string password)
+        public async Task<User> RegisterUserAsync(string name, string email, string password)
         {
-            if (await _context.users.AnyAsync(u => u.Email == user.Email))
+            if (await _context.users.AnyAsync(u => u.Email == email))
             {
                 throw new Exception("Email already exists.");
             }
+
+            User user = new User()
+            {
+                Name = name,
+                Email = email
+            };
 
             user.PasswordHash = ComputeSha256Hash(password);
 
