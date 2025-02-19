@@ -1,4 +1,5 @@
 ﻿using Choresbuddy_dotnet.Models;
+using Microsoft.EntityFrameworkCore;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
@@ -12,5 +13,7 @@ namespace Choresbuddy_dotnet.Services
         Task<string> LoginUserAsync(string email, string password);
         Task<bool> UpdateUserAsync(int id, User user);
         Task<bool> DeleteUserAsync(int id);
+        Task<IEnumerable<User>> GetChildrenAsync(int parentId);
+        Task<int> GetUserPointsAsync(int childId);
     }
 }

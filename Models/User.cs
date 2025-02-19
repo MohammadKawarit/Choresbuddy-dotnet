@@ -29,5 +29,8 @@ namespace Choresbuddy_dotnet.Models
 
         [Column("created_at")]
         public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
+
+        [Column("points")]
+        public int Points { get; set; } = 0; // Added to store total points
     }
 }

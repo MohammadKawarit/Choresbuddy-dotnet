@@ -98,5 +98,29 @@ namespace Choresbuddy_dotnet.Controllers
 
             return NoContent();
         }
+
+        // GET: api/users/{parentId}/children
+        [HttpGet("{parentId}/children")]
+        [Authorize(Roles = "Parent")] // Only parents can access
+        public async Task<ActionResult<IEnumerable<User>>> GetChildren(int parentId)
+        {
+            var children = await _userService.GetChildrenAsync(parentId);
+
+            if (children == null || !children.Any())
+            {
+                return NotFound("No children found for this parent.");
+            }
+
+            return Ok(children);
+        }
+
+        [HttpGet("child/{childId}/points")]
+        [Authorize(Roles = "Parent,Child")]
+        public async Task<IActionResult> GetChildPoints(int childId)
+        {
+            int totalPoints = await _userService.GetUserPointsAsync(childId);
+            return Ok(new { childId, points = totalPoints });
+        }
+
     }
 }

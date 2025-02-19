@@ -11,5 +11,9 @@ namespace Choresbuddy_dotnet.Services
         Task<Models.Task> CreateTaskAsync(Models.Task task);
         Task<bool> UpdateTaskAsync(int id, Models.Task task);
         Task<bool> DeleteTaskAsync(int id);
+        Task<IEnumerable<Models.Task>> GetTasksForChildAsync(int childId);
+        Task<bool> CompleteTaskAsync(int taskId);
+        Task<bool> VerifyTaskCompletionAsync(int taskId, string status);
+        Task<bool> AssignTaskToChildAsync(int taskId, int childId);
     }
 }

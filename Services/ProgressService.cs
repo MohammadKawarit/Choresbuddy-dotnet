@@ -52,5 +52,10 @@ namespace Choresbuddy_dotnet.Services
             await _context.SaveChangesAsync();
             return true;
         }
+
+        public async Task<Progress> GetChildProgressAsync(int childId)
+        {
+            return await _context.progresses.Where(p => p.ChildId == childId).FirstOrDefaultAsync();
+        }
     }
 }

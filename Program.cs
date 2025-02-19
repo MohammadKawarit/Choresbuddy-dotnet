@@ -29,8 +29,8 @@ builder.Services.AddScoped<ILeaderboardService, LeaderboardService>();
 var app = builder.Build(); 
 
 // Configure Middleware
-    app.UseSwagger();
-    app.UseSwaggerUI();
+app.UseSwagger();
+app.UseSwaggerUI();
 var port = Environment.GetEnvironmentVariable("PORT") ?? "8080";
 app.Urls.Add($"http://*:{port}");
 app.MapGet("/", () => "Welcome to ChoresBuddy API!");

@@ -56,5 +56,51 @@ namespace Choresbuddy_dotnet.Services
             await _context.SaveChangesAsync();
             return true;
         }
+
+        public async Task<IEnumerable<Models.Task>> GetTasksForChildAsync(int childId)
+        {
+            return await _context.tasks.Where(t => t.AssignedTo == childId).ToListAsync();
+        }
+
+        public async Task<bool> CompleteTaskAsync(int taskId)
+        {
+            var task = await _context.tasks.FindAsync(taskId);
+            if (task == null) return false;
+
+            task.Status = "COMPLETED";
+            await _context.SaveChangesAsync();
+            return true;
+        }
+
+        public async Task<bool> VerifyTaskCompletionAsync(int taskId, string status)
+        {
+            var task = await _context.tasks.FindAsync(taskId);
+            if (task == null) return false;
+
+            if (status == "COMPLETED")
+            {
+                var child = await _context.users.FindAsync(task.AssignedTo);
+                if (child != null) child.Points += task.Points;
+            }
+            else
+            {
+                task.Status = "MISSED";
+            }
+
+            await _context.SaveChangesAsync();
+            return true;
+        }
+
+        public async Task<bool> AssignTaskToChildAsync(int taskId, int childId)
+        {
+            var task = await _context.tasks.FindAsync(taskId);
+            var child = await _context.users.FindAsync(childId);
+
+            if (task == null || child == null) return false;
+
+            task.AssignedTo = childId;
+            await _context.SaveChangesAsync();
+            return true;
+        }
     }
 }

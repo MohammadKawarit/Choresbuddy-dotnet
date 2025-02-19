@@ -61,5 +61,22 @@ namespace Choresbuddy_dotnet.Services
             await _context.SaveChangesAsync();
             return true;
         }
+
+        public async Task<bool> RequestRewardAsync(RewardCart rewardCart)
+        {
+            _context.rewardCarts.Add(rewardCart);
+            await _context.SaveChangesAsync();
+            return true;
+        }
+
+        public async Task<bool> ApproveRewardAsync(int rewardCartId, string status)
+        {
+            var rewardRequest = await _context.rewardCarts.FindAsync(rewardCartId);
+            if (rewardRequest == null) return false;
+
+            rewardRequest.ParentApprovalStatus = status;
+            await _context.SaveChangesAsync();
+            return true;
+        }
     }
 }

@@ -1,5 +1,6 @@
 ﻿using Choresbuddy_dotnet.Models;
 using Choresbuddy_dotnet.Services;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Collections.Generic;
 using System.Threading.Tasks;
@@ -52,15 +53,6 @@ namespace Choresbuddy_dotnet.Controllers
             return NoContent();
         }
 
-        // PUT: api/rewardcart/{id}/approve (Approve reward)
-        [HttpPut("{id}/approve")]
-        public async Task<IActionResult> ApproveReward(int id)
-        {
-            var approved = await _rewardCartService.ApproveRewardAsync(id);
-            if (!approved) return NotFound();
-            return NoContent();
-        }
-
         // PUT: api/rewardcart/{id}/decline (Decline reward)
         [HttpPut("{id}/decline")]
         public async Task<IActionResult> DeclineReward(int id)
@@ -68,6 +60,26 @@ namespace Choresbuddy_dotnet.Controllers
             var declined = await _rewardCartService.DeclineRewardAsync(id);
             if (!declined) return NotFound();
             return NoContent();
+        }
+
+        [HttpPost]
+        [Authorize(Roles = "Child")]
+        public async Task<IActionResult> RequestReward([FromBody] RewardCart rewardCart)
+        {
+            var success = await _rewardCartService.RequestRewardAsync(rewardCart);
+            if (!success) return BadRequest("Failed to request reward");
+
+            return Ok("Reward request submitted");
+        }
+
+        [HttpPut("{rewardCartId}/approve")]
+        [Authorize(Roles = "Parent")]
+        public async Task<IActionResult> ApproveReward(int rewardCartId, [FromBody] string status)
+        {
+            var success = await _rewardCartService.ApproveRewardAsync(rewardCartId, status);
+            if (!success) return NotFound("Reward request not found");
+
+            return Ok("Reward request updated");
         }
     }
 }

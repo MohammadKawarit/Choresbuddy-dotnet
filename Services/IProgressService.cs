@@ -10,5 +10,6 @@ namespace Choresbuddy_dotnet.Services
         Task<Progress> GetProgressByChildIdAsync(int childId);
         Task<bool> UpdateProgressAsync(int childId, int tasksCompleted, int tasksMissed);
         Task<bool> RemoveProgressEntryAsync(int id);
+        Task<Progress> GetChildProgressAsync(int childId);
     }
 }

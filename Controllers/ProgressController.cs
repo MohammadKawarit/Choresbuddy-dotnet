@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using Choresbuddy_dotnet.Models;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
 
 namespace Choresbuddy_dotnet.Controllers
 {
@@ -52,6 +53,16 @@ namespace Choresbuddy_dotnet.Controllers
             var deleted = await _progressService.RemoveProgressEntryAsync(id);
             if (!deleted) return NotFound();
             return NoContent();
+        }
+
+        [HttpGet("child/{childId}")]
+        [Authorize(Roles = "Parent,Child")]
+        public async Task<ActionResult<Progress>> GetChildProgress(int childId)
+        {
+            var progress = await _progressService.GetChildProgressAsync(childId);
+            if (progress == null) return NotFound("No progress data found for this child");
+
+            return Ok(progress);
         }
     }
 }

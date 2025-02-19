@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using Choresbuddy_dotnet.Models;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
 
 namespace Choresbuddy_dotnet.Controllers
 {
@@ -63,6 +64,50 @@ namespace Choresbuddy_dotnet.Controllers
             var deleted = await _taskService.DeleteTaskAsync(id);
             if (!deleted) return NotFound();
             return NoContent();
+        }
+
+        [HttpGet("child/{childId}")]
+        [Authorize(Roles = "Parent,Child")]
+        public async Task<ActionResult<IEnumerable<Models.Task>>> GetTasksForChild(int childId)
+        {
+            var tasks = await _taskService.GetTasksForChildAsync(childId);
+            return Ok(tasks);
+        }
+
+        [HttpPost("{taskId}/complete")]
+        [Authorize(Roles = "Child")]
+        public async Task<IActionResult> CompleteTask(int taskId)
+        {
+            var success = await _taskService.CompleteTaskAsync(taskId);
+            if (!success) return NotFound("Task not found");
+
+            return Ok("Task marked as completed, pending review");
+        }
+
+        [HttpPut("{taskId}/verify")]
+        [Authorize(Roles = "Parent")]
+        public async Task<IActionResult> VerifyTask(int taskId, [FromBody] string status)
+        {
+            var success = await _taskService.VerifyTaskCompletionAsync(taskId, status);
+            if (!success) return NotFound("Task not found");
+
+            return Ok("Task verification updated");
+        }
+
+        [HttpPost("assign")]
+        [Authorize(Roles = "Parent")]
+        public async Task<IActionResult> AssignTask([FromBody] TaskAssignmentRequest request)
+        {
+            var success = await _taskService.AssignTaskToChildAsync(request.TaskId, request.ChildId);
+            if (!success) return BadRequest("Failed to assign task");
+
+            return Ok("Task assigned successfully");
+        }
+
+        public class TaskAssignmentRequest
+        {
+            public int TaskId { get; set; }
+            public int ChildId { get; set; }
         }
     }
 }

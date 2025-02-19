@@ -9,7 +9,7 @@ namespace Choresbuddy_dotnet.Data
         public AppDbContext(DbContextOptions<AppDbContext> options) : base(options) { }
 
         public DbSet<User> users { get; set; }
-        public DbSet<Task> tasks { get; set; }
+        public DbSet<Models.Task> tasks { get; set; }
         public DbSet<Reward> rewards { get; set; }
         public DbSet<Cart> carts { get; set; }
         public DbSet<Trophy> trophies { get; set; }

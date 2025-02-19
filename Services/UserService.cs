@@ -112,5 +112,16 @@ namespace Choresbuddy_dotnet.Services
 
             return new JwtSecurityTokenHandler().WriteToken(token);
         }
+
+        public async Task<IEnumerable<User>> GetChildrenAsync(int parentId)
+        {
+            return await _context.users.Where(u => u.ParentId == parentId).ToListAsync();
+        }
+        public async Task<int> GetUserPointsAsync(int childId)
+        {
+            var user = await _context.users.FindAsync(childId);
+            return user?.Points ?? 0;
+        }
+
     }
 }

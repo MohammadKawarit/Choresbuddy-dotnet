@@ -23,9 +23,18 @@ namespace Choresbuddy_dotnet.Models
         public Reward Reward { get; set; }
 
         [Column("parent_approval_status")]
-        public string ParentApprovalStatus { get; set; } = "PENDING";
+        public string ParentApprovalStatus { get; set; } = "PENDING"; // "PENDING", "APPROVED", "DECLINED"
 
         [Column("created_at")]
         public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
+
+        // **New Fields**
+        [Column("approved_by")]
+        public int? ApprovedBy { get; set; } // Tracks which parent approved the reward
+
+        public User? ApprovedParent { get; set; } // Navigation Property
+
+        [Column("canceled")]
+        public bool Canceled { get; set; } = false; // Allows child to cancel request
     }
 }
