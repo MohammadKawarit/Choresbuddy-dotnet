@@ -58,8 +58,8 @@ namespace Choresbuddy_dotnet.Controllers
         {
             try
             {
-                var userId = await _userService.LoginUserAsync(email, password);
-                return Ok(new { userId });
+                var user = await _userService.LoginUserAsync(email, password);
+                return Ok(user);
             }
             catch (Exception ex)
             {

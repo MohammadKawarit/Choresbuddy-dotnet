@@ -6,6 +6,7 @@ using System.Security.Claims;
 using System.Security.Cryptography;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
+using System.Text.Json;
 
 namespace Choresbuddy_dotnet.Services
 {
@@ -56,14 +57,22 @@ namespace Choresbuddy_dotnet.Services
             return user;
         }
 
-        public async Task<int> LoginUserAsync(string email, string password)
+        public async Task<string> LoginUserAsync(string email, string password)
         {
             var user = await _context.users.SingleOrDefaultAsync(u => u.Email == email);
+
             if (user == null || user.PasswordHash != ComputeSha256Hash(password))
             {
                 throw new Exception("Invalid email or password.");
             }
-            return (user.UserId);
+
+            var response = new
+            {
+                userId = user.UserId,
+                role = user.Role
+            };
+
+            return JsonSerializer.Serialize(response);
         }
 
         public async Task<bool> UpdateUserAsync(int id, User user)
