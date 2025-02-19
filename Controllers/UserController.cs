@@ -54,11 +54,11 @@ namespace Choresbuddy_dotnet.Controllers
 
         // POST: api/users/login
         [HttpPost("login")]
-        public async Task<ActionResult<string>> LoginUser([FromBody] LoginRequest request)
+        public async Task<ActionResult<string>> LoginUser(string email, string password)
         {
             try
             {
-                var token = await _userService.LoginUserAsync(request.Email, request.Password);
+                var token = await _userService.LoginUserAsync(email, password);
                 return Ok(new { token });
             }
             catch (Exception ex)
