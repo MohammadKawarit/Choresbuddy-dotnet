@@ -36,9 +36,8 @@ namespace Choresbuddy_dotnet.Controllers
             return Ok(rewardCart);
         }
 
-        // POST: api/rewardcart (Add reward to cart)
-        [HttpPost]
-        public async Task<ActionResult<RewardCart>> AddRewardToCart(RewardCart rewardCart)
+        [HttpPost("add-to-cart")]
+        public async Task<ActionResult<RewardCart>> AddToCart(RewardCart rewardCart)
         {
             var createdRewardCart = await _rewardCartService.AddRewardToCartAsync(rewardCart);
             return CreatedAtAction(nameof(GetRewardCart), new { id = createdRewardCart.RewardCartId }, createdRewardCart);
