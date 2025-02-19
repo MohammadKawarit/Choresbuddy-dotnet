@@ -30,7 +30,7 @@ namespace Choresbuddy_dotnet.Services
             return await _context.users.FindAsync(id);
         }
 
-        public async Task<User> RegisterUserAsync(string name, string email, string password, string role)
+        public async Task<User> RegisterUserAsync(string name, string email, string password, string role, int parentId)
         {
             if (await _context.users.AnyAsync(u => u.Email == email))
             {
@@ -44,6 +44,11 @@ namespace Choresbuddy_dotnet.Services
                 Role = role
             };
 
+            if (parentId != 0)
+            {
+                user.ParentId = parentId;
+            }
+
             user.PasswordHash = ComputeSha256Hash(password);
 
             _context.users.Add(user);
@@ -51,14 +56,14 @@ namespace Choresbuddy_dotnet.Services
             return user;
         }
 
-        public async Task<string> LoginUserAsync(string email, string password)
+        public async Task<int> LoginUserAsync(string email, string password)
         {
             var user = await _context.users.SingleOrDefaultAsync(u => u.Email == email);
             if (user == null || user.PasswordHash != ComputeSha256Hash(password))
             {
                 throw new Exception("Invalid email or password.");
             }
-            return GenerateJwtToken(user);
+            return (user.UserId);
         }
 
         public async Task<bool> UpdateUserAsync(int id, User user)
@@ -95,29 +100,6 @@ namespace Choresbuddy_dotnet.Services
                 }
                 return builder.ToString();
             }
-        }
-
-        private string GenerateJwtToken(User user)
-        {
-            var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration["Jwt:Key"]));
-            var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
-
-            var claims = new List<Claim>
-            {
-                new Claim(ClaimTypes.NameIdentifier, user.UserId.ToString()),
-                new Claim(ClaimTypes.Email, user.Email),
-                new Claim(ClaimTypes.Role, user.Role)
-            };
-
-            var token = new JwtSecurityToken(
-                _configuration["Jwt:Issuer"],
-                _configuration["Jwt:Audience"],
-                claims,
-                expires: DateTime.UtcNow.AddHours(2),
-                signingCredentials: creds
-            );
-
-            return new JwtSecurityTokenHandler().WriteToken(token);
         }
 
         public async Task<IEnumerable<User>> GetChildrenAsync(int parentId)
