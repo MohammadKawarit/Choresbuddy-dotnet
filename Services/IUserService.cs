@@ -11,7 +11,7 @@ namespace Choresbuddy_dotnet.Services
         Task<User> GetUserByIdAsync(int id);
         Task<User> RegisterUserAsync(string name, string email, string password, string role, int parentId);
         Task<string> LoginUserAsync(string email, string password);
-        Task<bool> UpdateUserAsync(int id, User user);
+        Task<bool> UpdateUserAsync(int id, string name, string email, string password, DateTime dob);
         Task<bool> DeleteUserAsync(int id);
         Task<IEnumerable<User>> GetChildrenAsync(int parentId);
         Task<int> GetUserPointsAsync(int childId);

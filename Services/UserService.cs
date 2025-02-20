@@ -75,15 +75,19 @@ namespace Choresbuddy_dotnet.Services
             return JsonSerializer.Serialize(response);
         }
 
-        public async Task<bool> UpdateUserAsync(int id, User user)
+        public async Task<bool> UpdateUserAsync(int id, string name, string email, string password, DateTime dob)
         {
             var existingUser = await _context.users.FindAsync(id);
             if (existingUser == null) return false;
 
-            existingUser.Name = user.Name;
-            existingUser.Email = user.Email;
-            existingUser.Dob = user.Dob;
-            existingUser.PasswordHash = ComputeSha256Hash(user.PasswordHash);
+            existingUser.Name = name;
+            existingUser.Email = email;
+            existingUser.Dob = DateTime.SpecifyKind(dob, DateTimeKind.Utc);
+            
+            if (!string.IsNullOrEmpty(password))
+            {
+                existingUser.PasswordHash = ComputeSha256Hash(password);
+            }
 
             await _context.SaveChangesAsync();
             return true;

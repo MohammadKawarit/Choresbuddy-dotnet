@@ -68,14 +68,9 @@ namespace Choresbuddy_dotnet.Controllers
 
         // PUT: api/users/{id}
         [HttpPut("{id}")]
-        public async Task<IActionResult> UpdateUser(int id, User user)
+        public async Task<IActionResult> UpdateUser(int id, string name, string email, DateTime dob, string password= "")
         {
-            if (id != user.UserId)
-            {
-                return BadRequest("User ID mismatch.");
-            }
-
-            var updated = await _userService.UpdateUserAsync(id, user);
+            var updated = await _userService.UpdateUserAsync(id, name, email, password, dob);
             if (!updated)
             {
                 return NotFound();
