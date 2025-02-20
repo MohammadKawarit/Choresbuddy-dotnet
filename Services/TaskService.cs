@@ -132,5 +132,18 @@ namespace Choresbuddy_dotnet.Services
 
             return tasks;
         }
+
+        public async Task<bool> SubmitTaskAsync(int taskId)
+        {
+            var task = await _context.tasks.FindAsync(taskId);
+            if (task == null || task.SubmittedDate != null)
+                return false; // Task not found or already submitted
+
+            task.SubmittedDate = DateTime.UtcNow;
+            task.Status = "PENDING"; // Update status after submission
+
+            await _context.SaveChangesAsync();
+            return true;
+        }
     }
 }

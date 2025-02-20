@@ -31,5 +31,8 @@ namespace Choresbuddy_dotnet.Models
 
         [Column("created_at")]
         public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
+
+        [Column("submitted_date")]
+        public DateTime? SubmittedDate { get; set; }
     }
 }
