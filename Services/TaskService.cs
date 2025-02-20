@@ -113,5 +113,24 @@ namespace Choresbuddy_dotnet.Services
             await _context.SaveChangesAsync();
             return true;
         }
+
+        public async Task<IEnumerable<Models.Task>> GetTasksForParentChildrenAsync(int parentId)
+        {
+            var childrenIds = await _context.users
+              .Where(u => u.ParentId == parentId)
+              .Select(u => u.UserId)
+              .ToListAsync();
+
+            if (!childrenIds.Any())
+            {
+                return new List<Models.Task>();
+            }
+
+            var tasks = await _context.tasks
+                .Where(t => childrenIds.Contains(t.AssignedTo))
+                .ToListAsync();
+
+            return tasks;
+        }
     }
 }

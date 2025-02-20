@@ -101,6 +101,19 @@ namespace Choresbuddy_dotnet.Controllers
             return Ok("Task assigned successfully");
         }
 
+        [HttpGet("{parentId}/tasks")]
+        public async Task<ActionResult<IEnumerable<Models.Task>>> GetTasksForParentChildren(int parentId)
+        {
+            var tasks = await _taskService.GetTasksForParentChildrenAsync(parentId);
+
+            if (tasks == null || !tasks.Any())
+            {
+                return NotFound("No tasks found for children.");
+            }
+
+            return Ok(tasks);
+        }
+
         public class TaskAssignmentRequest
         {
             public int TaskId { get; set; }
