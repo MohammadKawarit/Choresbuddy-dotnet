@@ -59,7 +59,7 @@ namespace Choresbuddy_dotnet.Services
 
         public async Task<string> LoginUserAsync(string email, string password)
         {
-            var user = await _context.users.SingleOrDefaultAsync(u => u.Email == email);
+            var user = await _context.users.SingleOrDefaultAsync(u => u.Email.ToLower() == email.ToLower());
 
             if (user == null || user.PasswordHash != ComputeSha256Hash(password))
             {
@@ -119,6 +119,16 @@ namespace Choresbuddy_dotnet.Services
         {
             var user = await _context.users.FindAsync(childId);
             return user?.Points ?? 0;
+        }
+
+        public async Task<int> GetUserBalanceAsync(int userId)
+        {
+            var user = await _context.users.FindAsync(userId);
+            if (user == null)
+            {
+                throw new KeyNotFoundException("User not found.");
+            }
+            return user.Balance;
         }
 
     }

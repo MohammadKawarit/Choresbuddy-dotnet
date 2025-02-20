@@ -19,7 +19,6 @@ namespace Choresbuddy_dotnet.Controllers
 
         // GET: api/users
         [HttpGet]
-        [Authorize(Roles = "Parent")] // Protects this route
         public async Task<ActionResult<IEnumerable<User>>> GetUsers()
         {
             return Ok(await _userService.GetUsersAsync());
@@ -44,7 +43,7 @@ namespace Choresbuddy_dotnet.Controllers
             try
             {
                 var createdUser = await _userService.RegisterUserAsync(name, email, password, role, parentId);
-                return CreatedAtAction(nameof(GetUser), new { id = createdUser.UserId }, createdUser);
+                return CreatedAtAction(nameof(GetUser), new { userId = createdUser.UserId, role=createdUser.Role }, createdUser);
             }
             catch (Exception ex)
             {
@@ -87,7 +86,6 @@ namespace Choresbuddy_dotnet.Controllers
 
         // DELETE: api/users/{id}
         [HttpDelete("{id}")]
-        [Authorize(Roles = "Parent")] // Only parents can delete users
         public async Task<IActionResult> DeleteUser(int id)
         {
             var deleted = await _userService.DeleteUserAsync(id);
@@ -101,7 +99,6 @@ namespace Choresbuddy_dotnet.Controllers
 
         // GET: api/users/{parentId}/children
         [HttpGet("{parentId}/children")]
-        [Authorize(Roles = "Parent")] // Only parents can access
         public async Task<ActionResult<IEnumerable<User>>> GetChildren(int parentId)
         {
             var children = await _userService.GetChildrenAsync(parentId);
@@ -115,11 +112,24 @@ namespace Choresbuddy_dotnet.Controllers
         }
 
         [HttpGet("child/{childId}/points")]
-        [Authorize(Roles = "Parent,Child")]
         public async Task<IActionResult> GetChildPoints(int childId)
         {
             int totalPoints = await _userService.GetUserPointsAsync(childId);
             return Ok(new { childId, points = totalPoints });
+        }
+
+        [HttpGet("{userId}/balance")]
+        public async Task<IActionResult> GetUserBalance(int userId)
+        {
+            try
+            {
+                int balance = await _userService.GetUserBalanceAsync(userId);
+                return Ok(new { userId, balance });
+            }
+            catch (KeyNotFoundException ex)
+            {
+                return NotFound(ex.Message);
+            }
         }
 
     }

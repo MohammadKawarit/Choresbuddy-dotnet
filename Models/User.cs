@@ -32,5 +32,11 @@ namespace Choresbuddy_dotnet.Models
 
         [Column("points")]
         public int Points { get; set; } = 0; // Added to store total points
+
+        [Column("balance")]
+        public int Balance { get; set; } = 0; // Added balance
+
+        [Column("dob")]
+        public DateTime? Dob { get; set; } // Added Date of Birth
     }
 }
