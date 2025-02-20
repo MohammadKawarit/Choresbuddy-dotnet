@@ -26,19 +26,10 @@ namespace Choresbuddy_dotnet.Models
         public string Status { get; set; } = "TO_DO";
 
         [Column("assigned_to")]
-        public int AssignedToId { get; set; }
-
-        [ForeignKey("AssignedToId")]
         public int AssignedTo { get; set; }
+
 
         [Column("created_at")]
         public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
-
-        // **New Fields**
-        [Column("parent_approval_status")]
-        public string ParentApprovalStatus { get; set; } = "PENDING"; // "PENDING", "APPROVED", "REJECTED"
-
-        [Column("verification_deadline")]
-        public DateTime? VerificationDeadline { get; set; } // Parents must approve before this deadline
     }
 }

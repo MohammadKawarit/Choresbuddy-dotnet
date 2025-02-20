@@ -1,4 +1,5 @@
 ﻿using Choresbuddy_dotnet.Models;
+using Choresbuddy_dotnet.Models.Requests;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
@@ -8,7 +9,7 @@ namespace Choresbuddy_dotnet.Services
     {
         Task<IEnumerable<Models.Task>> GetAllTasksAsync();
         Task<Models.Task> GetTaskByIdAsync(int taskId);
-        Task<Models.Task> CreateTaskAsync(Models.Task task);
+        Task<Models.Task> CreateTaskAsync(TaskRequest task);
         Task<bool> UpdateTaskAsync(int id, Models.Task task);
         Task<bool> DeleteTaskAsync(int id);
         Task<IEnumerable<Models.Task>> GetTasksForChildAsync(int childId);

@@ -1,5 +1,6 @@
 ﻿using Choresbuddy_dotnet.Data;
 using Choresbuddy_dotnet.Models;
+using Choresbuddy_dotnet.Models.Requests;
 using Microsoft.EntityFrameworkCore;
 using System.Collections.Generic;
 using System.Threading.Tasks;
@@ -25,11 +26,21 @@ namespace Choresbuddy_dotnet.Services
             return await _context.tasks.FirstOrDefaultAsync(t => t.TaskId == taskId);
         }
 
-        public async Task<Models.Task> CreateTaskAsync(Models.Task task)
+        public async Task<Models.Task> CreateTaskAsync(TaskRequest task)
         {
-            _context.tasks.Add(task);
+            Models.Task taskModel = new Models.Task()
+            {
+                Title = task.Title,
+                Description = task.Description,
+                AssignedTo = task.AssignedTo,
+                Deadline = DateTime.SpecifyKind(task.Deadline, DateTimeKind.Utc),
+                Points = task.Points,
+                Status = "TO_DO",
+                CreatedAt = DateTime.SpecifyKind(DateTime.Now, DateTimeKind.Utc)
+            };
+            _context.tasks.Add(taskModel);
             await _context.SaveChangesAsync();
-            return task;
+            return taskModel;
         }
 
         public async Task<bool> UpdateTaskAsync(int id, Models.Task task)

@@ -4,6 +4,7 @@ using Choresbuddy_dotnet.Models;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
+using Choresbuddy_dotnet.Models.Requests;
 
 namespace Choresbuddy_dotnet.Controllers
 {
@@ -38,7 +39,7 @@ namespace Choresbuddy_dotnet.Controllers
 
         // POST: api/task (Create a new task)
         [HttpPost]
-        public async Task<ActionResult<Models.Task>> CreateTask(Models.Task task)
+        public async Task<ActionResult<Models.Task>> CreateTask(TaskRequest task)
         {
             var createdTask = await _taskService.CreateTaskAsync(task);
             return CreatedAtAction(nameof(GetTask), new { id = createdTask.TaskId }, createdTask);
@@ -67,7 +68,6 @@ namespace Choresbuddy_dotnet.Controllers
         }
 
         [HttpGet("child/{childId}")]
-        [Authorize(Roles = "Parent,Child")]
         public async Task<ActionResult<IEnumerable<Models.Task>>> GetTasksForChild(int childId)
         {
             var tasks = await _taskService.GetTasksForChildAsync(childId);
@@ -75,7 +75,6 @@ namespace Choresbuddy_dotnet.Controllers
         }
 
         [HttpPost("{taskId}/complete")]
-        [Authorize(Roles = "Child")]
         public async Task<IActionResult> CompleteTask(int taskId)
         {
             var success = await _taskService.CompleteTaskAsync(taskId);
@@ -85,7 +84,6 @@ namespace Choresbuddy_dotnet.Controllers
         }
 
         [HttpPut("{taskId}/verify")]
-        [Authorize(Roles = "Parent")]
         public async Task<IActionResult> VerifyTask(int taskId, [FromBody] string status)
         {
             var success = await _taskService.VerifyTaskCompletionAsync(taskId, status);
@@ -95,7 +93,6 @@ namespace Choresbuddy_dotnet.Controllers
         }
 
         [HttpPost("assign")]
-        [Authorize(Roles = "Parent")]
         public async Task<IActionResult> AssignTask([FromBody] TaskAssignmentRequest request)
         {
             var success = await _taskService.AssignTaskToChildAsync(request.TaskId, request.ChildId);
