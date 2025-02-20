@@ -82,6 +82,8 @@ namespace Choresbuddy_dotnet.Services
 
             existingUser.Name = user.Name;
             existingUser.Email = user.Email;
+            existingUser.Dob = user.Dob;
+            existingUser.PasswordHash = ComputeSha256Hash(user.PasswordHash);
 
             await _context.SaveChangesAsync();
             return true;
