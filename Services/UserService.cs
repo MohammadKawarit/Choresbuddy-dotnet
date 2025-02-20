@@ -57,6 +57,29 @@ namespace Choresbuddy_dotnet.Services
             return user;
         }
 
+        public async Task<User> AddChild(string name, string email, string password, int parentId, DateTime dob)
+        {
+            if (await _context.users.AnyAsync(u => u.Email == email))
+            {
+                throw new Exception("Email already exists.");
+            }
+
+            User user = new User()
+            {
+                Name = name,
+                Email = email,
+                Role = "Child",
+                ParentId = parentId,
+                Dob = DateTime.SpecifyKind(dob, DateTimeKind.Utc)
+            };
+
+            user.PasswordHash = ComputeSha256Hash(password);
+
+            _context.users.Add(user);
+            await _context.SaveChangesAsync();
+            return user;
+        }
+
         public async Task<string> LoginUserAsync(string email, string password)
         {
             var user = await _context.users.SingleOrDefaultAsync(u => u.Email.ToLower() == email.ToLower());

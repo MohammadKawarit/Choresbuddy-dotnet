@@ -43,7 +43,22 @@ namespace Choresbuddy_dotnet.Controllers
             try
             {
                 var createdUser = await _userService.RegisterUserAsync(name, email, password, role, parentId);
-                return CreatedAtAction(nameof(GetUser), new { userId = createdUser.UserId, role=createdUser.Role }, createdUser);
+                return CreatedAtAction(nameof(GetUser), new { id = createdUser.UserId, role=createdUser.Role }, createdUser);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+
+        // POST: api/users/addChild
+        [HttpPost("addChild")]
+        public async Task<ActionResult<User>> AddChild(string name, string email, string password, int parentId, DateTime dob)
+        {
+            try
+            {
+                var createdUser = await _userService.AddChild(name, email, password, parentId, dob);
+                return CreatedAtAction(nameof(GetUser), new { id = createdUser.UserId, role = createdUser.Role }, createdUser);
             }
             catch (Exception ex)
             {
