@@ -87,16 +87,9 @@ namespace Choresbuddy_dotnet.Services
         {
             var task = await _context.tasks.FindAsync(taskId);
             if (task == null) return false;
-
-            if (status == "COMPLETED")
-            {
-                var child = await _context.users.FindAsync(task.AssignedTo);
-                if (child != null) child.Points += task.Points;
-            }
-            else
-            {
-                task.Status = "MISSED";
-            }
+            var child = await _context.users.FindAsync(task.AssignedTo);
+            if (child != null) child.Points += task.Points;
+            task.Status = "COMPLETED";
 
             await _context.SaveChangesAsync();
             return true;
