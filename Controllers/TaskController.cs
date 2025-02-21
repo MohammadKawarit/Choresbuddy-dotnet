@@ -114,10 +114,10 @@ namespace Choresbuddy_dotnet.Controllers
             return Ok(tasks);
         }
 
-        [HttpPatch("{taskId}/submit")]
-        public async Task<IActionResult> SubmitTask(int taskId)
+        [HttpPost("{taskId}/submit")]
+        public async Task<IActionResult> SubmitTask(int taskId, string comment)
         {
-            var result = await _taskService.SubmitTaskAsync(taskId);
+            var result = await _taskService.SubmitTaskAsync(taskId, comment);
             if (!result)
                 return NotFound("Task not found or already submitted.");
 

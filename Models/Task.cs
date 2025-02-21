@@ -34,5 +34,8 @@ namespace Choresbuddy_dotnet.Models
 
         [Column("submitted_date")]
         public DateTime? SubmittedDate { get; set; }
+
+        [Column("comment")]
+        public string? Comment { get; set; }
     }
 }
