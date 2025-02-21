@@ -160,5 +160,39 @@ namespace Choresbuddy_dotnet.Services
             return user.Balance;
         }
 
+        public async Task<ChildProfileDto> GetChildProfileAsync(int childId)
+        {
+            // Get child details
+            var child = await _context.users
+                .Where(u => u.UserId == childId && u.Role == "Child")
+                .FirstOrDefaultAsync();
+
+            if (child == null)
+            {
+                return null; // Child not found
+            }
+
+            // Fetch tasks assigned to the child
+            var tasks = await _context.tasks
+                .Where(t => t.AssignedTo == childId)
+                .ToListAsync();
+
+            // Categorize tasks
+            var availableTasks = tasks.Where(t => (t.Status == "TO_DO" || t.Status == "IN_PROGRESS") && t.Deadline > DateTime.UtcNow).ToList();
+            var lateTasks = tasks.Where(t => (t.Status == "TO_DO" || t.Status == "IN_PROGRESS") && t.Deadline <= DateTime.UtcNow).ToList();
+            var completedTasks = tasks.Where(t => t.Status == "COMPLETED").ToList();
+
+            // Return DTO
+            return new ChildProfileDto
+            {
+                ChildId = child.UserId,
+                ChildName = child.Name,
+                AvailableTasks = availableTasks,
+                LateTasks = lateTasks,
+                CompletedTasks = completedTasks,
+                Points = child.Points
+            };
+        }
+
     }
 }

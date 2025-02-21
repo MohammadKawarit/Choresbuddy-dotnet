@@ -17,5 +17,6 @@ namespace Choresbuddy_dotnet.Services
         Task<IEnumerable<User>> GetChildrenAsync(int parentId);
         Task<int> GetUserPointsAsync(int childId);
         Task<int> GetUserBalanceAsync(int userId);
+        Task<ChildProfileDto> GetChildProfileAsync(int childId);
     }
 }

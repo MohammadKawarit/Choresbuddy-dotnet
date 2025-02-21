@@ -142,5 +142,17 @@ namespace Choresbuddy_dotnet.Controllers
             }
         }
 
+        [HttpGet("child/{childId}/profile")]
+        public async Task<IActionResult> GetChildProfile(int childId)
+        {
+            var profile = await _userService.GetChildProfileAsync(childId);
+            if (profile == null)
+            {
+                return NotFound(new { message = "Child not found" });
+            }
+
+            return Ok(profile);
+        }
+
     }
 }
