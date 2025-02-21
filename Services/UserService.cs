@@ -178,8 +178,8 @@ namespace Choresbuddy_dotnet.Services
                 .ToListAsync();
 
             // Categorize tasks
-            var availableTasks = tasks.Where(t => (t.Status == "TO_DO" || t.Status == "IN_PROGRESS") && t.Deadline > DateTime.UtcNow).ToList();
-            var lateTasks = tasks.Where(t => (t.Status == "TO_DO" || t.Status == "IN_PROGRESS") && t.Deadline <= DateTime.UtcNow).ToList();
+            var availableTasks = tasks.Where(t => (t.Status == "TO_DO" || t.Status == "IN_PROGRESS" || t.Status == "PENDING") && t.Deadline > DateTime.UtcNow).ToList();
+            var lateTasks = tasks.Where(t => (t.Status == "TO_DO" || t.Status == "IN_PROGRESS" || t.Status == "PENDING") && t.Deadline <= DateTime.UtcNow).ToList();
             var completedTasks = tasks.Where(t => t.Status == "COMPLETED").ToList();
 
             // Return DTO
