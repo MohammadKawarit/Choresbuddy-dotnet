@@ -180,5 +180,34 @@ namespace Choresbuddy_dotnet.Services
 
             return leaderboard.OrderByDescending(l => l.Points).ToList();
         }
+
+        public async Task<List<SiblingLeaderboardDto>> GetChildrenLeaderboardAsync(int parentId)
+        {
+            // Get all siblings (other children of the same parent)
+            var siblings = await _context.users
+                .Where(u => u.ParentId == parentId && u.Role == "Child")
+                .ToListAsync();
+
+            // Get sibling leaderboard details
+            var leaderboard = new List<SiblingLeaderboardDto>();
+
+            foreach (var sibling in siblings)
+            {
+                var tasksDone = await _context.tasks.CountAsync(t => t.AssignedTo == sibling.UserId && t.Status == "COMPLETED");
+                var trophiesCount = await _context.trophies.CountAsync(t => t.ChildId == sibling.UserId);
+                var points = sibling.Points;
+
+                leaderboard.Add(new SiblingLeaderboardDto
+                {
+                    ChildId = sibling.UserId,
+                    ChildName = sibling.Name,
+                    TasksDone = tasksDone,
+                    Points = points,
+                    TrophiesEarned = trophiesCount
+                });
+            }
+
+            return leaderboard.OrderByDescending(l => l.Points).ToList();
+        }
     }
 }

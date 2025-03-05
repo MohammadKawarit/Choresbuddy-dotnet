@@ -19,6 +19,7 @@ namespace Choresbuddy_dotnet.Services
         Task<IEnumerable<Models.Task>> GetTasksForParentChildrenAsync(int parentId);
         Task<bool> SubmitTaskAsync(int taskId, string comment);
         Task<List<SiblingLeaderboardDto>> GetSiblingLeaderboardAsync(int childId);
+        Task<List<SiblingLeaderboardDto>> GetChildrenLeaderboardAsync(int parentId);
 
     }
 }

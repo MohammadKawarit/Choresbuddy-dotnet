@@ -137,6 +137,19 @@ namespace Choresbuddy_dotnet.Controllers
             return Ok(leaderboard);
         }
 
+        [HttpGet("child/{parentId}/children-leaderboard")]
+        public async Task<IActionResult> GetChildrenLeaderboard(int parentId)
+        {
+            var leaderboard = await _taskService.GetChildrenLeaderboardAsync(parentId);
+
+            if (leaderboard == null || leaderboard.Count == 0)
+            {
+                return NotFound(new { message = "No children found for this parent." });
+            }
+
+            return Ok(leaderboard);
+        }
+
         public class TaskAssignmentRequest
         {
             public int TaskId { get; set; }
