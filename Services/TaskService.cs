@@ -139,5 +139,46 @@ namespace Choresbuddy_dotnet.Services
             await _context.SaveChangesAsync();
             return true;
         }
+
+        public async Task<List<SiblingLeaderboardDto>> GetSiblingLeaderboardAsync(int childId)
+        {
+            // Get the child's parentId
+            var child = await _context.users
+                .Where(u => u.UserId == childId && u.Role == "Child")
+                .FirstOrDefaultAsync();
+
+            if (child == null || child.ParentId == null)
+            {
+                return new List<SiblingLeaderboardDto>(); // No siblings found
+            }
+
+            int parentId = child.ParentId.Value;
+
+            // Get all siblings (other children of the same parent)
+            var siblings = await _context.users
+                .Where(u => u.ParentId == parentId && u.Role == "Child")
+                .ToListAsync();
+
+            // Get sibling leaderboard details
+            var leaderboard = new List<SiblingLeaderboardDto>();
+
+            foreach (var sibling in siblings)
+            {
+                var tasksDone = await _context.tasks.CountAsync(t => t.AssignedTo == sibling.UserId && t.Status == "COMPLETED");
+                var trophiesCount = await _context.trophies.CountAsync(t => t.ChildId == sibling.UserId);
+                var points = sibling.Points;
+
+                leaderboard.Add(new SiblingLeaderboardDto
+                {
+                    ChildId = sibling.UserId,
+                    ChildName = sibling.Name,
+                    TasksDone = tasksDone,
+                    Points = points,
+                    TrophiesEarned = trophiesCount
+                });
+            }
+
+            return leaderboard.OrderByDescending(l => l.Points).ToList();
+        }
     }
 }
