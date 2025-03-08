@@ -26,6 +26,7 @@ builder.Services.AddScoped<IRewardCartService, RewardCartService>();
 builder.Services.AddScoped<ITrophyService, TrophyService>();
 builder.Services.AddScoped<ILeaderboardService, LeaderboardService>();
 builder.Services.AddScoped<INotificationService, NotificationService>();
+builder.Services.AddScoped<IRewardFilterService, RewardFilterService>();
 
 var app = builder.Build(); 
 

@@ -17,6 +17,7 @@ namespace Choresbuddy_dotnet.Data
         public DbSet<Progress> progresses { get; set; }
         public DbSet<RewardCart> rewardCarts { get; set; }
         public DbSet<Notification> notifications { get; set; }
+        public DbSet<RewardFilter> rewardFilter { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
