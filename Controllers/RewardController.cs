@@ -64,5 +64,18 @@ namespace Choresbuddy_dotnet.Controllers
             if (!deleted) return NotFound();
             return NoContent();
         }
+
+        [HttpGet("child/{childId}/available")]
+        public async Task<IActionResult> GetAvailableRewardsForChild(int childId)
+        {
+            var rewards = await _rewardService.GetFilteredRewardsForChildAsync(childId);
+
+            if (rewards == null || rewards.Count == 0)
+            {
+                return NotFound(new { message = "No rewards available based on parent filters." });
+            }
+
+            return Ok(rewards);
+        }
     }
 }

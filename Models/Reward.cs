@@ -11,10 +11,16 @@ namespace Choresbuddy_dotnet.Models
         public int RewardId { get; set; }
 
         [Column("name")]
-        public string Name { get; set; }
+        public string? Name { get; set; }
 
         [Column("points_required")]
         public int PointsRequired { get; set; }
+
+        [Column("description")]
+        public string? Description { get; set; }
+
+        [Column("image_url")]
+        public string? ImageUrl { get; set; }
 
         [Column("created_at")]
         public DateTime CreatedAt { get; set; } = DateTime.UtcNow;

@@ -11,5 +11,6 @@ namespace Choresbuddy_dotnet.Services
         Task<Reward> CreateRewardAsync(Reward reward);
         Task<bool> UpdateRewardAsync(int id, Reward reward);
         Task<bool> DeleteRewardAsync(int id);
+        Task<List<Reward>> GetFilteredRewardsForChildAsync(int childId);
     }
 }
