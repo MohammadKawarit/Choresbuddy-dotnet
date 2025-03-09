@@ -32,8 +32,6 @@ namespace Choresbuddy_dotnet.Models
         [Column("approved_by")]
         public int? ApprovedBy { get; set; } // Tracks which parent approved the reward
 
-        public User? ApprovedParent { get; set; } // Navigation Property
-
         [Column("canceled")]
         public bool Canceled { get; set; } = false; // Allows child to cancel request
     }
