@@ -36,22 +36,6 @@ namespace Choresbuddy_dotnet.Controllers
             return Ok(rewardCart);
         }
 
-        [HttpPost("add-to-cart")]
-        public async Task<ActionResult<RewardCart>> AddToCart(RewardCart rewardCart)
-        {
-            var createdRewardCart = await _rewardCartService.AddRewardToCartAsync(rewardCart);
-            return CreatedAtAction(nameof(GetRewardCart), new { id = createdRewardCart.RewardCartId }, createdRewardCart);
-        }
-
-        // DELETE: api/rewardcart/{id} (Remove reward from cart)
-        [HttpDelete("{id}")]
-        public async Task<IActionResult> RemoveRewardFromCart(int id)
-        {
-            var deleted = await _rewardCartService.RemoveRewardFromCartAsync(id);
-            if (!deleted) return NotFound();
-            return NoContent();
-        }
-
         // PUT: api/rewardcart/{id}/decline (Decline reward)
         [HttpPut("{id}/decline")]
         public async Task<IActionResult> DeclineReward(int id)
@@ -62,7 +46,6 @@ namespace Choresbuddy_dotnet.Controllers
         }
 
         [HttpPost]
-        [Authorize(Roles = "Child")]
         public async Task<IActionResult> RequestReward([FromBody] RewardCart rewardCart)
         {
             var success = await _rewardCartService.RequestRewardAsync(rewardCart);
@@ -71,14 +54,37 @@ namespace Choresbuddy_dotnet.Controllers
             return Ok("Reward request submitted");
         }
 
-        [HttpPut("{rewardCartId}/approve")]
-        [Authorize(Roles = "Parent")]
-        public async Task<IActionResult> ApproveReward(int rewardCartId, [FromBody] string status)
+        [HttpPost("add-to-cart")]
+        public async Task<IActionResult> AddToCart(int childId, int rewardId)
         {
-            var success = await _rewardCartService.ApproveRewardAsync(rewardCartId, status);
-            if (!success) return NotFound("Reward request not found");
-
-            return Ok("Reward request updated");
+            var rewardCart = await _rewardCartService.AddRewardToCartAsync(childId, rewardId);
+            if (rewardCart == null) return BadRequest("Insufficient points or invalid reward.");
+            return Ok(rewardCart);
         }
+
+        [HttpDelete("{rewardCartId}")]
+        public async Task<IActionResult> RemoveFromCart(int rewardCartId)
+        {
+            var success = await _rewardCartService.RemoveRewardFromCartAsync(rewardCartId);
+            if (!success) return NotFound();
+            return NoContent();
+        }
+
+        [HttpPost("submit/{childId}")]
+        public async Task<IActionResult> SubmitCart(int childId)
+        {
+            var success = await _rewardCartService.SubmitCartForApprovalAsync(childId);
+            if (!success) return BadRequest("Failed to submit cart.");
+            return Ok("Cart submitted for approval.");
+        }
+
+        [HttpPost("approve/{childId}")]
+        public async Task<IActionResult> ApproveCart(int childId)
+        {
+            var success = await _rewardCartService.ApproveCartAsync(childId);
+            if (!success) return BadRequest("Approval failed or insufficient balance.");
+            return Ok("Cart approved and balance deducted.");
+        }
+
     }
 }

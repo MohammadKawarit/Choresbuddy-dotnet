@@ -27,12 +27,5 @@ namespace Choresbuddy_dotnet.Models
 
         [Column("created_at")]
         public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
-
-        // **New Fields**
-        [Column("approved_by")]
-        public int? ApprovedBy { get; set; } // Tracks which parent approved the reward
-
-        [Column("canceled")]
-        public bool Canceled { get; set; } = false; // Allows child to cancel request
     }
 }
