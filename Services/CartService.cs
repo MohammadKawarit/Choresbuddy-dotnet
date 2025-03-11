@@ -23,6 +23,22 @@ namespace Choresbuddy_dotnet.Services
             return await _context.carts.FirstOrDefaultAsync(c => c.ChildId == childId);
         }
 
+        public async Task<List<Reward>> GetCartRewards(int cartId)
+        {
+            var rewardCarts = await _context.rewardCarts
+            .Where(r => r.CartId == cartId)
+            .ToListAsync();
+
+            List<Reward> rewards = new List<Reward>();
+
+            foreach (var rewardCart in rewardCarts)
+            {
+                rewards.Add(await _context.rewards.FindAsync(rewardCart.RewardId));
+            }
+
+            return rewards;
+        }
+
         public async Task<Cart> AddToCartAsync(Cart cart)
         {
             _context.carts.Add(cart);

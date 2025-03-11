@@ -24,13 +24,21 @@ namespace Choresbuddy_dotnet.Controllers
 
         // GET: api/cart/{childId}
         [HttpGet("{childId}")]
-        public async Task<ActionResult<Cart>> GetCart(int childId)
+        public async Task<IActionResult> GetCart(int childId)
         {
             var cart = await _cartService.GetCartByChildIdAsync(childId);
-            if (cart == null)
-                return NotFound();
 
-            return Ok(cart);
+            if (cart == null)
+                return NotFound(new { message = "Cart not found for this child." });
+
+            var response = new
+            {
+                cartId = cart.CartId,
+                childId = cart.ChildId,
+                rewards = await _cartService.GetCartRewards(cart.CartId)
+            };
+
+            return Ok(response);
         }
 
         // POST: api/cart (Add item to cart)
