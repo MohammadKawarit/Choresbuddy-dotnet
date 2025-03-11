@@ -9,7 +9,7 @@ namespace Choresbuddy_dotnet.Services
         Task<IEnumerable<RewardCart>> GetAllRewardCartsAsync();
         Task<RewardCart> GetRewardCartByIdAsync(int rewardCartId);
         Task<RewardCart> AddRewardToCartAsync(RewardCart rewardCart);
-        Task<bool> RemoveRewardFromCartAsync(int id);
+        Task<bool> RemoveRewardFromCartAsync(int cartId, int rewardId);
         Task<bool> ApproveRewardAsync(int id);
         Task<bool> DeclineRewardAsync(int id);
         Task<bool> RequestRewardAsync(RewardCart rewardCart);

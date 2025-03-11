@@ -107,9 +107,9 @@ namespace Choresbuddy_dotnet.Services
             return rewardCart;
         }
 
-        public async Task<bool> RemoveRewardFromCartAsync(int rewardCartId)
+        public async Task<bool> RemoveRewardFromCartAsync(int cartId, int rewardId)
         {
-            var rewardCart = await _context.rewardCarts.Include(rc => rc.Reward).FirstOrDefaultAsync(rc => rc.RewardCartId == rewardCartId);
+            var rewardCart = await _context.rewardCarts.Include(rc => rc.Reward).FirstOrDefaultAsync(rc => rc.CartId == cartId && rc.RewardId == rewardId);
             if (rewardCart == null) return false;
 
             // Restore child's points

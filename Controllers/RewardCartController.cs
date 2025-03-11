@@ -62,10 +62,10 @@ namespace Choresbuddy_dotnet.Controllers
             return Ok(rewardCart);
         }
 
-        [HttpDelete("{rewardCartId}")]
-        public async Task<IActionResult> RemoveFromCart(int rewardCartId)
+        [HttpDelete]
+        public async Task<IActionResult> RemoveFromCart(int cartId, int rewardId)
         {
-            var success = await _rewardCartService.RemoveRewardFromCartAsync(rewardCartId);
+            var success = await _rewardCartService.RemoveRewardFromCartAsync(cartId, rewardId);
             if (!success) return NotFound();
             return NoContent();
         }
