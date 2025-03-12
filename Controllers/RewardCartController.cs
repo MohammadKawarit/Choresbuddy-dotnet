@@ -36,11 +36,11 @@ namespace Choresbuddy_dotnet.Controllers
             return Ok(rewardCart);
         }
 
-        // PUT: api/rewardcart/{id}/decline (Decline reward)
-        [HttpPut("{id}/decline")]
-        public async Task<IActionResult> DeclineReward(int id)
+        // PUT: api/rewardcart/{childId}/decline (Decline reward)
+        [HttpPut("{childId}/decline")]
+        public async Task<IActionResult> DeclineReward(int childId)
         {
-            var declined = await _rewardCartService.DeclineRewardAsync(id);
+            var declined = await _rewardCartService.DeclineRewardAsync(childId);
             if (!declined) return NotFound();
             return NoContent();
         }

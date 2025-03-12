@@ -11,7 +11,7 @@ namespace Choresbuddy_dotnet.Services
         Task<RewardCart> AddRewardToCartAsync(RewardCart rewardCart);
         Task<bool> RemoveRewardFromCartAsync(int cartId, int rewardId);
         Task<bool> ApproveRewardAsync(int id);
-        Task<bool> DeclineRewardAsync(int id);
+        Task<bool> DeclineRewardAsync(int childId);
         Task<bool> RequestRewardAsync(RewardCart rewardCart);
         Task<bool> ApproveRewardAsync(int rewardCartId, string status);
         Task<RewardCart?> AddRewardToCartAsync(int childId, int rewardId);

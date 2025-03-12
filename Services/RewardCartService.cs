@@ -34,16 +34,6 @@ namespace Choresbuddy_dotnet.Services
             return true;
         }
 
-        public async Task<bool> DeclineRewardAsync(int id)
-        {
-            var rewardCart = await _context.rewardCarts.FindAsync(id);
-            if (rewardCart == null) return false;
-
-            rewardCart.ParentApprovalStatus = "DECLINED";
-            await _context.SaveChangesAsync();
-            return true;
-        }
-
         public async Task<bool> RequestRewardAsync(RewardCart rewardCart)
         {
             _context.rewardCarts.Add(rewardCart);
@@ -174,6 +164,36 @@ namespace Choresbuddy_dotnet.Services
                 rewardCart.ParentApprovalStatus = "APPROVED";
             }
             await _notificationService.AddNotificationAsync(childId, $"Your parent has approved your reward!");
+
+            await _context.SaveChangesAsync();
+
+            return true;
+        }
+
+        public async Task<bool> DeclineRewardAsync(int childId)
+        {
+            var cart = await _context.carts.Include(c => c.Child).FirstOrDefaultAsync(c => c.ChildId == childId);
+            if (cart == null) return false;
+
+            var parent = await _context.users.FindAsync(cart.Child.ParentId);
+            if (parent == null) return false;
+
+            var rewardCarts = await _context.rewardCarts.Where(rc => rc.CartId == cart.CartId).ToListAsync();
+            foreach (var item in rewardCarts)
+            {
+                item.Reward = await _context.rewards.FindAsync(item.RewardId);
+            }
+            int totalCost = rewardCarts.Sum(rc => rc.Reward.PointsRequired);
+
+            var child = await _context.users.FirstOrDefaultAsync(u => u.UserId == childId);
+
+            child.Points += totalCost;
+
+            foreach (var rewardCart in rewardCarts)
+            {
+                rewardCart.ParentApprovalStatus = "DECLINED";
+            }
+            await _notificationService.AddNotificationAsync(childId, $"Your parent has declined your reward!");
 
             await _context.SaveChangesAsync();
 
