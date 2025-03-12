@@ -10,6 +10,6 @@ namespace Choresbuddy_dotnet.Services
         Task<Cart> GetCartByChildIdAsync(int childId);
         Task<Cart> AddToCartAsync(Cart cart);
         Task<bool> RemoveFromCartAsync(int id);
-        Task<List<Reward>> GetCartRewards(int cartId);
+        Task<List<RewardInCart>> GetCartRewards(int cartId);
     }
 }

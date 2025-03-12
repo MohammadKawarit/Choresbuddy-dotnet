@@ -136,7 +136,16 @@ namespace Choresbuddy_dotnet.Services
             var parentId = cart.Child.ParentId;
             if (parentId == null) return false;
 
+            var rewardCarts = await _context.rewardCarts.Where(r => r.CartId == cart.CartId && r.ParentApprovalStatus == "PENDING")
+            .ToListAsync();
+            foreach ( var rewardCart in rewardCarts )
+            {
+                rewardCart.ParentApprovalStatus = "SUBMITTED";
+            }
+
             await _notificationService.AddNotificationAsync(parentId.Value, $"{cart.Child.Name} submitted a reward cart for approval.");
+
+            await _context.SaveChangesAsync();
 
             return true;
         }
