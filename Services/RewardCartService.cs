@@ -148,7 +148,7 @@ namespace Choresbuddy_dotnet.Services
             var parent = await _context.users.FindAsync(cart.Child.ParentId);
             if (parent == null) return false;
 
-            var rewardCarts = await _context.rewardCarts.Where(rc => rc.CartId == cart.CartId).ToListAsync();
+            var rewardCarts = await _context.rewardCarts.Where(rc => rc.CartId == cart.CartId && rc.ParentApprovalStatus == "SUBMITTED").ToListAsync();
             foreach (var item in rewardCarts)
             {
                 item.Reward = await _context.rewards.FindAsync(item.RewardId);   
@@ -178,7 +178,7 @@ namespace Choresbuddy_dotnet.Services
             var parent = await _context.users.FindAsync(cart.Child.ParentId);
             if (parent == null) return false;
 
-            var rewardCarts = await _context.rewardCarts.Where(rc => rc.CartId == cart.CartId).ToListAsync();
+            var rewardCarts = await _context.rewardCarts.Where(rc => rc.CartId == cart.CartId && rc.ParentApprovalStatus == "SUBMITTED").ToListAsync();
             foreach (var item in rewardCarts)
             {
                 item.Reward = await _context.rewards.FindAsync(item.RewardId);
