@@ -154,5 +154,13 @@ namespace Choresbuddy_dotnet.Controllers
             return Ok(profile);
         }
 
+        [HttpGet("AddBalance/{userId}/{balance}")]
+        public async Task<IActionResult> GetChildProfile(int userId, int balance)
+        {
+            var newBalance = await _userService.AddBalance(userId, balance);
+
+            return Ok(newBalance);
+        }
+
     }
 }

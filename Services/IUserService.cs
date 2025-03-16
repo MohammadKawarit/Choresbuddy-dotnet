@@ -18,5 +18,6 @@ namespace Choresbuddy_dotnet.Services
         Task<int> GetUserPointsAsync(int childId);
         Task<int> GetUserBalanceAsync(int userId);
         Task<ChildProfileDto> GetChildProfileAsync(int childId);
+        Task<int> AddBalance(int userId, int balance);
     }
 }

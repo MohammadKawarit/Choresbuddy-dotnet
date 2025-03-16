@@ -194,5 +194,17 @@ namespace Choresbuddy_dotnet.Services
             };
         }
 
+        public async Task<int> AddBalance(int userId, int balance)
+        {
+            var user = await _context.users.FindAsync(userId);
+            if (user == null)
+            {
+                throw new KeyNotFoundException("User not found.");
+            }
+            user.Balance += balance;
+            await _context.SaveChangesAsync();
+
+            return user.Balance;
+        }
     }
 }
